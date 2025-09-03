@@ -1,0 +1,193 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Tauri Backend",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/src-tauri/target/debug/time-tracker",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "cargo-build-debug",
+      "environment": [
+        {
+          "name": "RUST_LOG",
+          "value": "debug,tauri=debug,calendar_app=trace"
+        },
+        {
+          "name": "RUST_BACKTRACE",
+          "value": "full"
+        },
+        {
+          "name": "TAURI_DEBUG",
+          "value": "1"
+        }
+      ],
+      "sourceLanguages": ["rust"],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "MIMode": "lldb"
+    },
+    {
+      "name": "Debug Backend Commands",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/src-tauri/target/debug/time-tracker",
+      "args": ["--dev"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "cargo-build-debug",
+      "environment": [
+        {
+          "name": "RUST_LOG",
+          "value": "trace"
+        },
+        {
+          "name": "RUST_BACKTRACE",
+          "value": "full"
+        },
+        {
+          "name": "TAURI_DEBUG",
+          "value": "1"
+        },
+        {
+          "name": "TAURI_DEBUG_COMMANDS",
+          "value": "1"
+        }
+      ],
+      "sourceLanguages": ["rust"],
+      "breakpointMode": "auto",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set disassembly flavor to Intel",
+          "text": "set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Debug Process Functions",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/src-tauri/target/debug/time-tracker",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "cargo-build-debug",
+      "environment": [
+        {
+          "name": "RUST_LOG",
+          "value": "debug,sysinfo=debug,calendar_app::process=trace"
+        },
+        {
+          "name": "RUST_BACKTRACE",
+          "value": "full"
+        },
+        {
+          "name": "TAURI_DEBUG",
+          "value": "1"
+        }
+      ],
+      "sourceLanguages": ["rust"],
+      "breakOnLoad": true,
+      "expressions": [
+        "sys.processes().len()",
+        "process.name()",
+        "process.memory()",
+        "process.run_time()"
+      ]
+    },
+    {
+      "name": "Debug Rust Tests",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/src-tauri/target/debug/deps/calendar_app-*",
+      "args": [
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "cwd": "${workspaceFolder}/src-tauri",
+      "console": "integratedTerminal",
+      "preLaunchTask": "cargo-test-build",
+      "environment": [
+        {
+          "name": "RUST_LOG",
+          "value": "debug"
+        },
+        {
+          "name": "RUST_BACKTRACE",
+          "value": "full"
+        },
+        {
+          "name": "RUST_TEST_THREADS",
+          "value": "1"
+        }
+      ],
+      "sourceLanguages": ["rust"]
+    },
+    {
+      "name": "Attach to Tauri Process",
+      "type": "lldb",
+      "request": "attach",
+      "program": "${workspaceFolder}/src-tauri/target/debug/time-tracker",
+      "processId": "${command:pickProcess}",
+      "sourceLanguages": ["rust"],
+      "environment": [
+        {
+          "name": "RUST_LOG",
+          "value": "debug"
+        },
+        {
+          "name": "RUST_BACKTRACE",
+          "value": "full"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "label": "cargo-build-debug",
+      "type": "shell",
+      "command": "cargo",
+      "args": ["build", "--bin", "time-tracker"],
+      "cwd": "${workspaceFolder}/src-tauri",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "cargo-test-build",
+      "type": "shell",
+      "command": "cargo",
+      "args": ["test", "--no-run", "--bin", "time-tracker"],
+      "cwd": "${workspaceFolder}/src-tauri",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$rustc"]
+    },
+    {
+      "label": "cargo-clean",
+      "type": "shell",
+      "command": "cargo",
+      "args": ["clean"],
+      "cwd": "${workspaceFolder}/src-tauri",
+      "group": "build"
+    }
+  ]
+}
