@@ -1,11 +1,7 @@
-use std::fs;
-use std::sync::Mutex;
-use log::debug;
-use serde::{Deserialize, Serialize};
-use tauri::State;
-use tauri::Manager;
-use std::path::Path;
+mod calendar;
 
+use std::sync::Mutex;
+use tauri::{Manager, State};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -17,7 +13,7 @@ pub fn run() {
         .setup(|app| {
             // Load events on startup
             let store = app.state::<EventStore>();
-            match load_events(&app.handle()) {
+            match calendar::load_events(&app.handle()) {
                 Ok(events) => {
                     if let Ok(mut store_events) = store.0.lock() {
                         *store_events = events;
@@ -40,41 +36,47 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
-// Event structure
-#[derive(Serialize, Deserialize, Clone)]
-struct CalendarEvent {
-    id: String,
-    title: String,
-    date: String,
-}
-
 // State to hold events
 #[derive(Default)]
-struct EventStore(Mutex<Vec<CalendarEvent>>);
+pub struct EventStore(Mutex<Vec<calendar::CalendarEvent>>);
 
 // Get events
 #[tauri::command]
-async fn get_events<'r>(app: tauri::AppHandle, store: State<'r, EventStore>) -> Result<Vec<CalendarEvent>, String> {
-    let events = store.0.lock().map_err(|e| format!("Lock error: {}", e))?.clone();
+async fn get_events<'a>(
+    _app: tauri::AppHandle,
+    store: State<'a, EventStore>,
+) -> Result<Vec<calendar::CalendarEvent>, String> {
+    let events = store
+        .0
+        .lock()
+        .map_err(|e| format!("Lock error: {}", e))?
+        .clone();
     Ok(events)
 }
 
-
 // Add event
 #[tauri::command]
-async fn add_event<'r>(event: CalendarEvent, app: tauri::AppHandle, store: State<'r, EventStore>) -> Result<(), String> {
+async fn add_event<'r>(
+    event: calendar::CalendarEvent,
+    app: tauri::AppHandle,
+    store: State<'r, EventStore>,
+) -> Result<(), String> {
     let mut events = store.0.lock().map_err(|e| format!("Lock error: {}", e))?;
     events.push(event.clone());
-    save_events(&app, &events)?;
+    calendar::save_events(&app, &events)?;
     Ok(())
 }
 
 // Delete event
 #[tauri::command]
-async fn delete_event<'r>(id: String, app: tauri::AppHandle, store: State<'r, EventStore>) -> Result<(), String> {
+async fn delete_event<'r>(
+    id: String,
+    app: tauri::AppHandle,
+    store: State<'r, EventStore>,
+) -> Result<(), String> {
     let mut events = store.0.lock().map_err(|e| format!("Lock error: {}", e))?;
     events.retain(|e| e.id != id);
-    save_events(&app, &events)?;
+    calendar::save_events(&app, &events)?;
     Ok(())
 }
 
@@ -118,38 +120,4 @@ async fn open_file_location(path: String) -> Result<(), String> {
     }
 
     Ok(())
-}
-
-// Save events to file
-fn save_events(app: &tauri::AppHandle, events: &[CalendarEvent]) -> Result<(), String> {
-    let app_data_dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| format!("Path error: {}", e))?;
-
-    // Ensure the directory exists
-    if !app_data_dir.exists() {
-        fs::create_dir_all(&app_data_dir).map_err(|e| format!("Create dir error: {}", e))?;
-    }
-
-    let path = app_data_dir.join("events.json");
-    let json = serde_json::to_string_pretty(events).map_err(|e| format!("Serialization error: {}", e))?;
-    fs::write(&path, json).map_err(|e| format!("Write error: {}", e))?;
-    debug!("Events saved to: {}", path.display());
-    Ok(())
-}
-
-// Load events from file
-fn load_events(app: &tauri::AppHandle) -> Result<Vec<CalendarEvent>, String> {
-    let path = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| format!("Path error: {}", e))?
-        .join("events.json");
-    if !Path::new(&path).exists() {
-        return Ok(vec![]);
-    }
-    let data = fs::read(&path).map_err(|e| format!("Read error: {}", e))?;
-    let events: Vec<CalendarEvent> = serde_json::from_slice(&data).map_err(|e| format!("Deserialization error: {}", e))?;
-    Ok(events)
 }

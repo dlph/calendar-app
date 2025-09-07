@@ -1,23 +1,18 @@
 local_resource(
-    'ui:dev',
-    cmd='',
-    serve_cmd='yarn dev',
-)
-
-local_resource(
     'cargo build',
     dir='src-tauri',
     cmd='cargo build',
+    deps=['src', 'src-tauri'],
     auto_init=False,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    allow_parallel=False,
 )
 
 local_resource(
-    'tauri build',
-    cmd='cargo tauri build',
-)
-
-local_resource(
-    'yarn',
-    cmd='yarn install',
+    'cargo tauri dev',
+    dir='src-tauri',
+    serve_cmd='cargo tauri dev',
     auto_init=False,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    allow_parallel=False,
 )
