@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Tauri Backend - Development",
+    "adapter": "CodeLLDB",
+    "label": "Debug Tauri Rust Backend (Dev Mode)",
+    "type": "lldb",
+    "request": "launch",
+    "program": "${ZED_WORKTREE_ROOT}/src-tauri/target/debug/calendar-app",
+    "args": [],
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "build": {
+      "command": "cargo",
+      "args": [
+        "build",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--bin",
+        "calendar-app"
+      ]
+    },
+    "environment": [
+      {
+        "name": "RUST_LOG",
+        "value": "debug,tauri=debug,calendar_app=trace"
+      },
+      {
+        "name": "RUST_BACKTRACE",
+        "value": "full"
+      },
+      {
+        "name": "TAURI_DEBUG",
+        "value": "true"
+      },
+      {
+        "name": "WEBKIT_DISABLE_COMPOSITING_MODE",
+        "value": "1"
+      }
+    ],
+    "sourceLanguages": ["rust"],
+    "console": "integratedTerminal",
+    "internalConsoleOptions": "openOnSessionStart"
+  }
+]

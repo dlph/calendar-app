@@ -1,0 +1,111 @@
+[
+  {
+    "label": "Tauri Dev",
+    "command": "yarn",
+    "args": ["tauri", "dev"],
+    "group": "build",
+    "cwd": "${workspaceFolder}",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    },
+    "problemMatcher": ["$rustc"]
+  },
+  {
+    "label": "Tauri Build",
+    "command": "yarn",
+    "args": ["tauri", "build"],
+    "group": "build",
+    "cwd": "${workspaceFolder}",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    },
+    "problemMatcher": ["$rustc"]
+  },
+  {
+    "label": "Tauri Build Debug",
+    "command": "yarn",
+    "args": ["tauri", "build", "--debug"],
+    "group": "build",
+    "cwd": "${workspaceFolder}",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    },
+    "problemMatcher": ["$rustc"]
+  },
+  {
+    "label": "Cargo Build",
+    "command": "cargo",
+    "args": ["build"],
+    "group": "build",
+    "cwd": "${workspaceFolder}/src-tauri",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    },
+    "problemMatcher": ["$rustc"]
+  },
+  {
+    "label": "Cargo Test",
+    "command": "cargo",
+    "args": ["test"],
+    "group": "test",
+    "cwd": "${workspaceFolder}/src-tauri",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    },
+    "problemMatcher": ["$rustc"]
+  },
+  {
+    "label": "Frontend Dev",
+    "command": "yarn",
+    "args": ["dev"],
+    "group": "build",
+    "cwd": "${workspaceFolder}",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    }
+  },
+  {
+    "label": "Frontend Build",
+    "command": "yarn",
+    "args": ["build"],
+    "group": "build",
+    "cwd": "${workspaceFolder}",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    }
+  },
+  {
+    "label": "Install Dependencies",
+    "command": "yarn",
+    "args": ["install"],
+    "group": "build",
+    "cwd": "${workspaceFolder}",
+    "presentation": {
+      "echo": true,
+      "reveal": "always",
+      "focus": false,
+      "panel": "shared"
+    }
+  }
+]

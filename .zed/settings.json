@@ -1,0 +1,29 @@
+{
+  "languages": {
+    "Vue": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "tab_size": 2
+    },
+    "TypeScript": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "tab_size": 2
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "tab_size": 2
+    }
+  },
+  "prettier": {
+    "allowed": true,
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "vueIndentScriptAndStyle": false
+  },
+  "format_on_save": "on"
+}
